@@ -12,8 +12,7 @@
 #include "shaders/glsl/basic/basic_material.h"
 #include "shaders/uniform_buffer.h"
 
-#include "events/event_dispatcher.h"
-#include "events/key_events.h"
+#include "shaders/texture_16bit_generator.h"
 
 void Scene::init()
 {
@@ -45,14 +44,53 @@ void Scene::setup_entities()
 
   m_registry.emplace<Component::IndexedMesh>(entity, mesh);
   m_registry.emplace<Component::Material>(entity, material);
+
+  glGenFramebuffers(1, &m_framebuffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
+
+  m_fboTex = Texture::generateEmpty16bitTexture(1920, 1080);
+
+  glBindTexture(GL_TEXTURE_2D, m_fboTex);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fboTex, 0);
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+  {
+    std::cerr << "Framebuffer is not complete!" << std::endl;
+  }
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  // glBindTexture(GL_TEXTURE_2D, 0);
 };
 
 void Scene::render()
 {
-  glClearColor(0.f, 0.f, 0.f, 1.f);
+  // This writes to the framebuffer. Why doesn't anything else work?
+  glClearColor(0.00006, 0.f, 0.f, 0.f);
+
+  // glBindTexture(GL_TEXTURE_2D, m_fboTex);
+  glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
+  glViewport(0, 0, 1920, 1080);
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   m_render_system.render(m_registry);
+
+  int w = 1920;
+  int h = 1080;
+
+  unsigned short *pixels = new unsigned short[w * h * 4];
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
+
+  for (int x = 0; x < w; x++)
+  {
+    for (int y = 0; y < h; y++)
+    {
+      int i = y * w * 4 + x * 4;
+
+      std::cout << pixels[i] << " " << pixels[i + 1] << std::endl;
+    }
+  }
+
+  delete[] pixels;
 };
 
 Scene::~Scene()

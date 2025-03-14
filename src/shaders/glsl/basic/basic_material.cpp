@@ -18,7 +18,7 @@ Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
 void Shader::BasicMaterial::init_shader_program()
 {
 
-  m_texture_id = Texture::generate16bitTexture();
+  m_texture_id = Texture::generate16bitTexture(2160, 2160);
 
   bind();
   update_uniform_mat4("model", get_transform());

@@ -10,6 +10,8 @@ private:
   entt::registry m_registry;
   System::Render m_render_system;
   Shader::UniformBuffer m_uniform_buffer;
+  GLuint m_framebuffer;
+  GLuint m_fboTex;
 
   glm::mat4x4 m_camera;
   void setup_entities();
