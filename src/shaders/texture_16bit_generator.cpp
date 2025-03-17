@@ -8,6 +8,8 @@ unsigned int Texture::generateEmpty16bitTexture(unsigned int w, unsigned int h)
   glGenTextures(1, &texture_id);
   glBindTexture(GL_TEXTURE_2D, texture_id);
 
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -21,10 +23,9 @@ unsigned int Texture::generateEmpty16bitTexture(unsigned int w, unsigned int h)
   }
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, w, h, 0, GL_RGBA, GL_UNSIGNED_SHORT, data);
-  glGenerateMipmap(GL_TEXTURE_2D);
+  // glBindTexture(GL_TEXTURE_2D, 0);
 
-  glBindTexture(GL_TEXTURE_2D, 0);
-
+  delete[] data;
   return texture_id;
 }
 
@@ -51,8 +52,8 @@ unsigned int Texture::generate16bitTexture(unsigned int w, unsigned int h)
     {
       int i = y * w * 4 + x * 4;
 
-      data[i] = x;
-      data[i + 1] = y;
+      data[i] = x * 100;
+      data[i + 1] = y * 100;
       data[i + 2] = 0;
       data[i + 3] = 65535;
     }
@@ -60,7 +61,7 @@ unsigned int Texture::generate16bitTexture(unsigned int w, unsigned int h)
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, w, h, 0, GL_RGBA, GL_UNSIGNED_SHORT, data);
   glGenerateMipmap(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  // glBindTexture(GL_TEXTURE_2D, 0);
 
   delete[] data;
   return texture_id;

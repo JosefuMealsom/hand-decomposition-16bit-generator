@@ -5,6 +5,7 @@
 #include "glm/ext/vector_float3.hpp"
 #include "pch/pch.h"
 #include "shaders/texture_16bit_generator.h"
+#include "shaders/texture_loader.h"
 #include "logger.h"
 
 Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
@@ -18,7 +19,8 @@ Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
 void Shader::BasicMaterial::init_shader_program()
 {
 
-  m_texture_id = Texture::generate16bitTexture(2160, 2160);
+  m_texture_id = Texture::generate16bitTexture(1080, 1080);
+  // m_texture_id = Texture::generate8bitTexture();
 
   bind();
   update_uniform_mat4("model", get_transform());
@@ -33,7 +35,8 @@ void Shader::BasicMaterial::init_shader_program()
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, m_texture_id);
 
-  // bind uniform blocks
+  update_uniform_1i("texture1", 0);
+
   unbind();
 }
 

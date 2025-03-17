@@ -18,7 +18,7 @@ void Scene::init()
 {
   setup_entities();
 
-  glEnable(GL_DEPTH_TEST);
+  // glEnable(GL_DEPTH_TEST);
 
   m_render_system = System::Render();
   m_uniform_buffer = Shader::UniformBuffer();
@@ -45,10 +45,11 @@ void Scene::setup_entities()
   m_registry.emplace<Component::IndexedMesh>(entity, mesh);
   m_registry.emplace<Component::Material>(entity, material);
 
+  m_fboTex = Texture::generate16bitTexture(512, 512);
   glGenFramebuffers(1, &m_framebuffer);
   glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 
-  m_fboTex = Texture::generateEmpty16bitTexture(1920, 1080);
+  // m_fboTex = Texture::generateEmpty16bitTexture(1920, 1080);
 
   glBindTexture(GL_TEXTURE_2D, m_fboTex);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fboTex, 0);
@@ -57,42 +58,55 @@ void Scene::setup_entities()
     std::cerr << "Framebuffer is not complete!" << std::endl;
   }
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
   // glBindTexture(GL_TEXTURE_2D, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+  glGenRenderbuffers(1, &m_rbo);
+  glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 512, 512);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
 };
 
-void Scene::render()
+void Scene::renderToFramebuffer(int framebuffer)
 {
-  // This writes to the framebuffer. Why doesn't anything else work?
-  glClearColor(0.00006, 0.f, 0.f, 0.f);
+  glClearColor(0.f, 0.f, 0.f, 0.f);
 
-  // glBindTexture(GL_TEXTURE_2D, m_fboTex);
-  glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
-  glViewport(0, 0, 1920, 1080);
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fboTex, 0);
+  glDisable(GL_DEPTH_TEST);
+  // glViewport(0, 0, 1920, 1080);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   m_render_system.render(m_registry);
 
-  int w = 1920;
-  int h = 1080;
+  int w = 512;
+  int h = 512;
 
   unsigned short *pixels = new unsigned short[w * h * 4];
   glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
 
-  for (int x = 0; x < w; x++)
-  {
-    for (int y = 0; y < h; y++)
-    {
-      int i = y * w * 4 + x * 4;
+  // for (int x = 0; x < w; x++)
+  // {
+  //   for (int y = 0; y < h; y++)
+  //   {
+  //     int i = y * w * 4 + x * 4;
+  //     std::cout << pixels[i] << " " << pixels[i + 1] << std::endl;
+  //   }
+  // }
 
-      std::cout << pixels[i] << " " << pixels[i + 1] << std::endl;
-    }
-  }
-
+  std::cout << pixels[2000] << std::endl;
   delete[] pixels;
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Scene::render()
+{
+  renderToFramebuffer(0);
+  // renderToFramebuffer(m_framebuffer);
 };
 
 Scene::~Scene()
-{ /* delete m_camera; */
+{
 }

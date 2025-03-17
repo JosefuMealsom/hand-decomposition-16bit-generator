@@ -12,9 +12,11 @@ private:
   Shader::UniformBuffer m_uniform_buffer;
   GLuint m_framebuffer;
   GLuint m_fboTex;
+  GLuint m_rbo;
 
   glm::mat4x4 m_camera;
   void setup_entities();
+  void renderToFramebuffer(int);
 
 public:
   void render();

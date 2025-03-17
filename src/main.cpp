@@ -9,7 +9,7 @@ int main()
 {
   Log::init();
 
-  GLFWwindow *window = Window::create_window(1920, 1080, "My window");
+  GLFWwindow *window = Window::create_window(512, 512, "My window");
 
   if (window == nullptr)
   {
@@ -28,7 +28,7 @@ int main()
     // Thats why we draw to a back buffer and then swap them.
     glfwSwapBuffers(window);
     glfwPollEvents();
-    break;
+    // break;
   }
 
   LOG_INFO("Closing application");
