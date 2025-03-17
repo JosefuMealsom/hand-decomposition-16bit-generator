@@ -49,22 +49,26 @@ ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# Link static library
-target_link_libraries(${target_name} PRIVATE libglfw3.a)
+if(APPLE)
+    # Link static library
+    target_link_libraries(${target_name} PRIVATE libglfw3.a)
 
-# Link dynamic library into code.
-# target_link_libraries(${DIRECTORY} PRIVATE libglfw3.dylib)
+    # Link dynamic library into code.
+    # target_link_libraries(${DIRECTORY} PRIVATE libglfw3.dylib)
 
-# Mac specific libraries
-target_link_libraries(${target_name} PRIVATE "-framework Cocoa" "-framework OpenGL" "-framework IOKit -framework CoreServices")
+    # Mac specific libraries
+    target_link_libraries(${target_name} PRIVATE "-framework Cocoa" "-framework OpenGL" "-framework IOKit -framework CoreServices")
+
+    # Copy compile commands from build to source directory
+    add_custom_command(
+        TARGET ${target_name}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${CMAKE_BINARY_DIR}/compile_commands.json
+                ${CMAKE_SOURCE_DIR}/compile_commands.json
+    )
+elseif(WIN32)
+    target_link_libraries(${target_name} PRIVATE glfw3.lib OpenGL32.lib)
+endif()
 
 target_precompile_headers(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch/pch.h)
-
-# Copy compile commands from build to source directory
-add_custom_command(
-    TARGET ${target_name}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_BINARY_DIR}/compile_commands.json
-            ${CMAKE_SOURCE_DIR}/compile_commands.json
-)
