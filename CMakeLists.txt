@@ -45,6 +45,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
 ${CMAKE_CURRENT_SOURCE_DIR}/vendor/entt/single_include/entt
 ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm/includes
+${CMAKE_CURRENT_SOURCE_DIR}/vendor/assimp/include
 ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
@@ -89,6 +90,8 @@ elseif(WIN32)
     # Update: No longer the case, keeping comment here for learning purposes
     set_target_properties(${project_name} PROPERTIES  
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}") 
+    
+    install(FILES libs/assimp-vc143-mtd.dll DESTINATION bin)
 endif()
 
 target_precompile_headers(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch/pch.h)

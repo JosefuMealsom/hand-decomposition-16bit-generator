@@ -28,7 +28,7 @@ int main()
 		// Thats why we draw to a back buffer and then swap them.
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		break;
+		//break;
 	}
 
 	LOG_INFO("Closing application");

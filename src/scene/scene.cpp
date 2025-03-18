@@ -88,18 +88,18 @@ void Scene::renderToFramebuffer(int framebuffer)
 	//	}
 	//}
 
-	FileSystem::WriteBinaryFile("C:\\Users\\dmshost\\Documents\\test.raw", pixels, w * h * 4 * 2);
-	int t = 40000;
+	//FileSystem::WriteBinaryFile("C:\\Users\\dmshost\\Documents\\test.raw", pixels, w * h * 4 * 2);
+	//int t = 40000;
 
-	delete[] pixels;
+	//delete[] pixels;
 }
 
 void Scene::render()
 {
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//glClearColor(0.f, 0.f, 0.f, 1.f);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//renderToFramebuffer(0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	renderToFramebuffer(0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 	glClearColor(0.f, 0.f, 0.f, 1.f);
