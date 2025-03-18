@@ -66,9 +66,29 @@ if(APPLE)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 ${CMAKE_BINARY_DIR}/compile_commands.json
                 ${CMAKE_SOURCE_DIR}/compile_commands.json
+    )   
+    
+    # Add symbolic link to resources directory which contains images, shader files 
+    set(link_src "${CMAKE_SOURCE_DIR}/resources")
+    set(link_dst "${CMAKE_BINARY_DIR}/resources")
+    set(link_dst "${CMAKE_BINARY_DIR}/$<CONFIG>/resources")
+
+    add_custom_command( 
+    TARGET ${target_name} 
+    POST_BUILD COMMAND ${CMAKE_COMMAND} 
+        -E create_symlink ${link_src} ${link_dst} 
+    COMMENT "symbolic link ${link_src} => ${link_dst}" 
     )
 elseif(WIN32)
-    target_link_libraries(${target_name} PRIVATE glfw3.lib OpenGL32.lib)
+    target_link_libraries(${target_name} PRIVATE glfw3.lib OpenGL32.lib) 
+
+    # This currently doesn't work. Need to set the working directory
+    # correctly for the resources under project properties, debugging
+    # working directory. Basically tells it where to look for file paths.
+    # Set to $(ProjectDir)..
+    # Update: No longer the case, keeping comment here for learning purposes
+    set_target_properties(${project_name} PROPERTIES  
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}") 
 endif()
 
 target_precompile_headers(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch/pch.h)

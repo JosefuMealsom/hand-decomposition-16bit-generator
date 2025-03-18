@@ -6,3 +6,19 @@ build
 compile_commands.json
 
 .vs
+
+CMakeFiles
+
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+
+CMakeCache.txt
+cmake_install.cmake
+
+*.dir/
+Debug
+Release
+x64
+out

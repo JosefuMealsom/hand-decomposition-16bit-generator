@@ -9,8 +9,8 @@
 #include "logger.h"
 
 Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
-	: Program(SourcePath("./src/shaders/glsl/basic/vertex.glsl",
-		"./src/shaders/glsl/basic/fragment.glsl"))
+	: Program(SourcePath("resources/shaders/vertex.glsl",
+		"resources/shaders/fragment.glsl"))
 {
 	m_color = color;
 	init_shader_program();
