@@ -1,8 +1,8 @@
 #pragma once
 #include "entt.hpp"
-#include "scene/camera/camera.h"
 #include "shaders/uniform_buffer.h"
 #include "systems/render.h"
+#include "render/fbo.h"
 
 class Scene
 {
@@ -10,16 +10,16 @@ private:
   entt::registry m_registry;
   System::Render m_render_system;
   Shader::UniformBuffer m_uniform_buffer;
-  GLuint m_framebuffer;
-  GLuint m_fboTex;
-  GLuint m_rbo;
+  Render::Fbo m_fbo;
 
-  glm::mat4x4 m_camera;
-  void setup_entities();
-  void renderToFramebuffer(int);
+  void SetupEntities();
+  void DrawScene();
+  void PrintPixels(unsigned short *, unsigned int, unsigned int);
+  bool m_shouldQuitApplication = false;
 
 public:
-  void render();
-  void init();
+  void Render();
+  void Init();
   ~Scene();
+  bool shouldQuitApplication() { return m_shouldQuitApplication; };
 };

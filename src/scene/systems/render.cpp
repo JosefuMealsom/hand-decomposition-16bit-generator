@@ -23,7 +23,7 @@ namespace System
       material.shader->update();
 
       glBindVertexArray(mesh.vao_id);
-      glDrawElements(GL_TRIANGLES, mesh.num_indices(), GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_TRIANGLES, mesh.NumIndices, GL_UNSIGNED_INT, 0);
 
       material.shader->unbind();
     }
