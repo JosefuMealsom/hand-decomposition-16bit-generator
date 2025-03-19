@@ -9,51 +9,51 @@
 #include "logger.h"
 
 Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
-	: Program(SourcePath("resources/shaders/vertex.glsl",
-		"resources/shaders/fragment.glsl"))
+    : Program(SourcePath("resources/shaders/vertex.glsl",
+                         "resources/shaders/fragment.glsl"))
 {
-	m_color = color;
-	init_shader_program();
+  m_color = color;
+  init_shader_program();
 }
 
 void Shader::BasicMaterial::init_shader_program()
 {
 
-	m_texture_id = Texture::generate16bitTexture(1920, 1080);
-	// m_texture_id = Texture::generate8bitTexture();
+  m_texture_id = Texture::generate16bitTexture(1920, 1080);
+  // m_texture_id = Texture::generate8bitTexture();
 
-	bind();
-	update_uniform_mat4("model", get_transform());
+  bind();
+  update_uniform_mat4("model", get_transform());
 
-	// Only need to bind this texture once, which is great.
-	// Also, if we want to bin more textures, need to set the active
-	// texture units to increment, so next will be GL_TEXTURE1. These
-	// appear as uniforms in our program.
-	// We also need to get the uniform locations of the samplers and set them.
-	// So glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0).
-	// Using just one texture will work without this though.
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture_id);
+  // Only need to bind this texture once, which is great.
+  // Also, if we want to bin more textures, need to set the active
+  // texture units to increment, so next will be GL_TEXTURE1. These
+  // appear as uniforms in our program.
+  // We also need to get the uniform locations of the samplers and set them.
+  // So glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0).
+  // Using just one texture will work without this though.
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, m_texture_id);
 
-	update_uniform_1i("texture1", 0);
+  update_uniform_1i("texture1", 0);
 
-	unbind();
+  unbind();
 }
 
 glm::mat4 Shader::BasicMaterial::get_transform()
 {
-	/* m_rotation -= 0.005; */
+  /* m_rotation -= 0.005; */
 
-	glm::mat4 transform = glm::mat4(1.0f);
-	transform = glm::scale(transform, glm::vec3(0.5, 0.5, 0.5));
-	//transform = glm::translate(transform, glm::vec3(0, 0, 0));
-	//transform = glm::rotate(transform, glm::radians(m_rotation),
-	//	glm::vec3(1.0, 0.0, 0.0));
+  glm::mat4 transform = glm::mat4(1.0f);
+  transform = glm::scale(transform, glm::vec3(1, 1, 1));
+  // transform = glm::translate(transform, glm::vec3(0, 0, 0));
+  // transform = glm::rotate(transform, glm::radians(m_rotation),
+  //	glm::vec3(1.0, 0.0, 0.0));
 
-	return transform;
+  return transform;
 }
 
 void Shader::BasicMaterial::update()
 {
-	update_uniform_mat4("model", get_transform());
+  update_uniform_mat4("model", get_transform());
 }

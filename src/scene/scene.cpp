@@ -14,7 +14,7 @@
 #include "file_system/file_writer.h"
 #include "render/image_writer.h"
 
-void Scene::Init()
+Scene::Scene()
 {
   SetupEntities();
 
@@ -22,6 +22,7 @@ void Scene::Init()
 
   m_render_system = System::Render();
   m_uniform_buffer = Shader::UniformBuffer();
+  m_fbo = new Render::Fbo(1920, 1080);
 
   glm::vec3 cPosition = glm::vec3(0., 0., 1.);
   glm::vec3 cFront = glm::vec3(0., 0., -1.);
@@ -41,8 +42,6 @@ void Scene::SetupEntities()
       std::make_shared<Shader::BasicMaterial>(glm::vec3(1.f, 1.f, 1.f));
 
   Component::Material material(basic_shader);
-
-  m_fbo = Render::Fbo(1920, 1080);
 
   m_registry.emplace<Component::IndexedMesh>(entity, mesh);
   m_registry.emplace<Component::Material>(entity, material);
@@ -72,14 +71,16 @@ void Scene::Render()
 {
   DrawScene();
 
-  m_fbo.bind();
+  m_fbo->bind();
+
   DrawScene();
   Render::Image::Write16BitBufferToRawFile(1920, 1080);
-  m_fbo.unbind();
+  m_fbo->unbind();
 
   m_shouldQuitApplication = true;
 };
 
 Scene::~Scene()
 {
+  delete m_fbo;
 }

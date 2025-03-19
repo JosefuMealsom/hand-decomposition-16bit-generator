@@ -17,7 +17,6 @@ int main()
   }
 
   Scene scene = Scene();
-  scene.Init();
 
   while (!glfwWindowShouldClose(window) && !scene.shouldQuitApplication())
   {
