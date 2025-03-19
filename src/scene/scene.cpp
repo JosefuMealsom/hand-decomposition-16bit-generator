@@ -25,19 +25,19 @@ Scene::Scene()
   m_uniform_buffer = Shader::UniformBuffer();
   m_fbo = new Render::Fbo(1920, 1080);
 
-  glm::vec3 cPosition = glm::vec3(0., 0., 1.);
+  glm::vec3 cPosition = glm::vec3(0., 0., 10.);
   glm::vec3 cFront = glm::vec3(0., 0., -1.);
   glm::vec3 cUp = glm::vec3(0., 1., 0.);
 
   m_uniform_buffer.update_camera(glm::lookAt(cPosition, cFront, cUp));
-  m_uniform_buffer.update_projection(glm::ortho(-1., 1., 1., -1., 0., 1000.));
+  m_uniform_buffer.update_projection(glm::ortho(-960., 960., 540., -540., 0., 1000.));
 }
 
 void Scene::SetupEntities()
 {
   auto entity = m_registry.create();
 
-  std::string path = "./resources/models/stanford-bunny.fbx";
+  std::string path = "./resources/models/hand.fbx";
   Component::IndexedMesh mesh = Mesh::Loader::LoadMeshFromFile(path);
 
   std::shared_ptr<Shader::Program> basic_shader =
@@ -57,18 +57,6 @@ void Scene::DrawScene()
   m_render_system.render(m_registry);
 }
 
-void Scene::PrintPixels(unsigned short *pixels, unsigned int w, unsigned int h)
-{
-  for (int x = 0; x < w; x++)
-  {
-    for (int y = 0; y < h; y++)
-    {
-      int i = y * w * 4 + x * 4;
-      std::cout << pixels[i] << " " << pixels[i + 1] << std::endl;
-    }
-  }
-}
-
 void Scene::Render()
 {
   DrawScene();
@@ -76,6 +64,7 @@ void Scene::Render()
   // m_fbo->bind();
 
   // DrawScene();
+  // Render::Image::PrintPixels(1920, 1080);
   // Render::Image::Write16BitBufferToRawFile(1920, 1080);
   // m_fbo->unbind();
 

@@ -20,6 +20,5 @@ private:
 
   void SetupEntities();
   void DrawScene();
-  void PrintPixels(unsigned short *, unsigned int, unsigned int);
   bool m_shouldQuitApplication = false;
 };
