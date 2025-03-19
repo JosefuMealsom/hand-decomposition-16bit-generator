@@ -45,7 +45,8 @@ glm::mat4 Shader::BasicMaterial::get_transform()
   /* m_rotation -= 0.005; */
 
   glm::mat4 transform = glm::mat4(1.0f);
-  transform = glm::scale(transform, glm::vec3(1, 1, 1));
+  const float s = 0.002;
+  transform = glm::scale(transform, glm::vec3(s, s, s));
   // transform = glm::translate(transform, glm::vec3(0, 0, 0));
   // transform = glm::rotate(transform, glm::radians(m_rotation),
   //	glm::vec3(1.0, 0.0, 0.0));

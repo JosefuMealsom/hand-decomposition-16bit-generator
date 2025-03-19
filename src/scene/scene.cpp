@@ -13,6 +13,7 @@
 
 #include "file_system/file_writer.h"
 #include "render/image_writer.h"
+#include "mesh/loader.h"
 
 Scene::Scene()
 {
@@ -36,7 +37,8 @@ void Scene::SetupEntities()
 {
   auto entity = m_registry.create();
 
-  Component::IndexedMesh mesh = Mesh::Square::generate_square_mesh();
+  std::string path = "./resources/models/stanford-bunny.fbx";
+  Component::IndexedMesh mesh = Mesh::Loader::LoadMeshFromFile(path);
 
   std::shared_ptr<Shader::Program> basic_shader =
       std::make_shared<Shader::BasicMaterial>(glm::vec3(1.f, 1.f, 1.f));
@@ -71,13 +73,13 @@ void Scene::Render()
 {
   DrawScene();
 
-  m_fbo->bind();
+  // m_fbo->bind();
 
-  DrawScene();
-  Render::Image::Write16BitBufferToRawFile(1920, 1080);
-  m_fbo->unbind();
+  // DrawScene();
+  // Render::Image::Write16BitBufferToRawFile(1920, 1080);
+  // m_fbo->unbind();
 
-  m_shouldQuitApplication = true;
+  // m_shouldQuitApplication = true;
 };
 
 Scene::~Scene()
