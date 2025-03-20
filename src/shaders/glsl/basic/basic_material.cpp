@@ -7,6 +7,7 @@
 #include "shaders/texture_16bit_generator.h"
 #include "shaders/texture_loader.h"
 #include "logger.h"
+#include "shaders/texture_loader.h"
 
 Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
 	: Program(SourcePath("resources/shaders/vertex.glsl",
@@ -19,8 +20,10 @@ Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
 void Shader::BasicMaterial::init_shader_program()
 {
 
-	m_texture_id = Texture::generate16bitTexture(2048, 2048);
+	// m_texture_id = Texture::generate16bitTexture(0, 0);
 	// m_texture_id = Texture::generate8bitTexture();
+
+	m_texture_id = TextureLoader::load_texture("./resources/images/texture-blender.png", 1024, 1024, 4);
 
 	bind();
 	update_uniform_mat4("model", get_transform());

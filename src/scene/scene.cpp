@@ -59,16 +59,17 @@ void Scene::DrawScene()
 
 void Scene::Render()
 {
-	DrawScene();
-
-	// m_fbo->bind();
-
 	// DrawScene();
-	// Render::Image::PrintPixels(1920, 1080);
-	// Render::Image::Write16BitBufferToRawFile(1920, 1080);
-	// m_fbo->unbind();
 
-	// m_shouldQuitApplication = true;
+	//m_fbo->bind();
+
+	DrawScene();
+	// Render::Image::PrintPixels(1920, 1080);
+	//Render::Image::WritePixelsToFile(1920, 1080);
+	//Render::Image::Write16BitBufferToRawFile(1920, 1080);
+	//m_fbo->unbind();
+
+	//m_shouldQuitApplication = true;
 };
 
 Scene::~Scene()
