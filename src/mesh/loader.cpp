@@ -2,6 +2,7 @@
 #include "pch/pch.h"
 #include "scene/components/indexed_mesh.h"
 #include <assimp/Importer.hpp>
+#include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <vector>
@@ -13,55 +14,58 @@
 
 Component::IndexedMesh Mesh::Loader::LoadMeshFromFile(const std::string &path)
 {
-  Assimp::Importer importer;
-  const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	// Assimp::Importer importer;
 
-  LOG_INFO("Number of meshes: {}", scene->mNumMeshes);
+	// Using function version due to unresolved symbol while linking on windows.
+	const aiScene *scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
-  if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-  {
-    LOG_ERROR("ERROR::ASSIMP::{}", importer.GetErrorString());
-  }
+	// LOG_INFO("Number of meshes: {}", scene->mNumMeshes);
 
-  LOG_INFO("Model {} successfully loaded", path);
+	// if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	//{
+	//	LOG_ERROR("ERROR::ASSIMP::{}", aiGetErrorString());
+	// }
 
-  std::vector<Vertex> vertices;
-  std::vector<unsigned int> indices;
+	// LOG_INFO("Model {} successfully loaded", path);
 
-  // Assuming path only contains 1 mesh for now
-  aiMesh *mesh = scene->mMeshes[0];
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
 
-  // LOG_INFO("Vertices: {}", mesh->mNumVertices);
-  // LOG_INFO("texcoords: {}", mesh->mTextureCoords);
+	// Assuming path only contains 1 mesh for now
+	aiMesh *mesh = scene->mMeshes[0];
 
-  Vertex vertex;
+	// LOG_INFO("Vertices: {}", mesh->mNumVertices);
+	// LOG_INFO("texcoords: {}", mesh->mTextureCoords);
 
-  for (int i = 0; i < mesh->mNumVertices; i++)
-  {
-    glm::vec3 vector;
-    vector.x = mesh->mVertices[i].x;
-    vector.y = mesh->mVertices[i].y;
-    vector.z = mesh->mVertices[i].z;
-    vertex.Position = vector;
+	for (int i = 0; i < mesh->mNumVertices; i++)
+	{
+		Vertex vertex;
 
-    vector.x = mesh->mNormals[i].x;
-    vector.y = mesh->mNormals[i].y;
-    vector.z = mesh->mNormals[i].z;
-    vertex.Normal = vector;
+		glm::vec3 vector;
+		vector.x = mesh->mVertices[i].x;
+		vector.y = mesh->mVertices[i].y;
+		vector.z = mesh->mVertices[i].z;
+		vertex.Position = vector;
 
-    vector.x = mesh->mTextureCoords[0][i].x;
-    vector.y = mesh->mTextureCoords[0][i].y;
-    vertex.TexCoords = vector;
+		vector.x = mesh->mNormals[i].x;
+		vector.y = mesh->mNormals[i].y;
+		vector.z = mesh->mNormals[i].z;
+		vertex.Normal = vector;
 
-    vertices.push_back(vertex);
-  }
+		vector.x = mesh->mTextureCoords[0][i].x;
+		vector.y = mesh->mTextureCoords[0][i].y;
+		vertex.TexCoords = vector;
 
-  for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-  {
-    aiFace face = mesh->mFaces[i];
-    for (unsigned int j = 0; j < face.mNumIndices; j++)
-      indices.push_back(face.mIndices[j]);
-  }
+		vertices.push_back(vertex);
+	}
 
-  return Mesh::Generate(vertices, indices);
+	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+	{
+		aiFace face = mesh->mFaces[i];
+		for (unsigned int j = 0; j < face.mNumIndices; j++)
+			indices.push_back(face.mIndices[j]);
+	}
+
+	aiReleaseImport(scene);
+	return Mesh::Generate(vertices, indices);
 }

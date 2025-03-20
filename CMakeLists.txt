@@ -82,7 +82,7 @@ if(APPLE)
     COMMENT "symbolic link ${link_src} => ${link_dst}"
     )
 elseif(WIN32)
-    target_link_libraries(${target_name} PRIVATE glfw3.lib OpenGL32.lib)
+    target_link_libraries(${target_name} PRIVATE glfw3.lib OpenGL32.lib assimp-vc143-mt.lib) 
 
     # This currently doesn't work. Need to set the working directory
     # correctly for the resources under project properties, debugging
@@ -92,7 +92,7 @@ elseif(WIN32)
     set_target_properties(${project_name} PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
-    install(FILES libs/assimp-vc143-mtd.dll DESTINATION bin)
+    configure_file("vendor/assimp/lib/assimp-vc143-mt.dll" "${CMAKE_BINARY_DIR}" COPYONLY)
 endif()
 
 target_precompile_headers(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch/pch.h)
