@@ -37,7 +37,7 @@ void Scene::SetupEntities()
 {
 	auto entity = m_registry.create();
 
-	std::string path = ".\\resources\\models\\hand.fbx";
+	std::string path = "./resources/models/testy.fbx";
 	Component::IndexedMesh mesh = Mesh::Loader::LoadMeshFromFile(path);
 
 	std::shared_ptr<Shader::Program> basic_shader =
