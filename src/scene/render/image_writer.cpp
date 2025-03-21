@@ -7,60 +7,57 @@
 #include <fstream>
 #include <iostream>
 
-void Render::Image::WritePixelsToFile(unsigned int w, unsigned int h) {
-	unsigned short* pixels = new unsigned short[w * h * 4];
-	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
+void Render::Image::WritePixelsToFile(unsigned int w, unsigned int h)
+{
+  unsigned short *pixels = new unsigned short[w * h * 4];
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
 
-	std::ofstream myfile;
-	myfile.open("pixels.txt");
+  std::ofstream myfile;
+  myfile.open("pixels.txt");
 
-	for (int i = 0; i < w * h * 4; i += 4) {
-		myfile << pixels[i] << " " << pixels[i + 1] << std::endl;
-	}
+  for (int x = 0; x < w; x++)
+  {
+    for (int y = 0; y < h; y++)
+    {
+      int i = y * w * 4 + x * 4;
+      myfile << y << " " << x << " " << pixels[i] << " " << pixels[i + 1] << std::endl;
+    }
+  }
 
-	//for (int x = 0; x < w; x++)
-	//{
-	//	for (int y = 0; y < h; y++)
-	//	{
-	//		int i = y * w * 4 + x * 4;
-	//		myfile << pixels[i] << " " << pixels[i + 1] << std::endl;
-	//	}
-	//}
-
-	myfile.close();
+  myfile.close();
 }
 
 void Render::Image::PrintPixels(unsigned int w, unsigned int h)
 {
-	unsigned short* pixels = new unsigned short[w * h * 4];
-	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
+  unsigned short *pixels = new unsigned short[w * h * 4];
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
 
-	for (int x = 0; x < w; x++)
-	{
-		for (int y = 0; y < h; y++)
-		{
-			int i = y * w * 4 + x * 4;
-			LOG_INFO("{} {}", pixels[i], pixels[i + 1]);
-		}
-	}
+  for (int x = 0; x < w; x++)
+  {
+    for (int y = 0; y < h; y++)
+    {
+      int i = y * w * 4 + x * 4;
+      LOG_INFO("{} {}", pixels[i], pixels[i + 1]);
+    }
+  }
 }
 
 void Render::Image::Write8BitBufferToRawFile(unsigned int w, unsigned int h)
 {
-	unsigned short* pixels = new unsigned short[w * h * 4];
-	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+  unsigned short *pixels = new unsigned short[w * h * 4];
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-	FileSystem::WriteBinaryFile("./test.raw", pixels, w * h * 4);
+  FileSystem::WriteBinaryFile("./test.raw", pixels, w * h * 4);
 
-	delete[] pixels;
+  delete[] pixels;
 }
 
 void Render::Image::Write16BitBufferToRawFile(unsigned int w, unsigned int h)
 {
-	unsigned short* pixels = new unsigned short[w * h * 4];
-	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
+  unsigned short *pixels = new unsigned short[w * h * 4];
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_SHORT, pixels);
 
-	FileSystem::WriteBinaryFile("./test.raw", pixels, w * h * 4 * 2);
+  FileSystem::WriteBinaryFile("./test.raw", pixels, w * h * 4 * 2);
 
-	delete[] pixels;
+  delete[] pixels;
 }

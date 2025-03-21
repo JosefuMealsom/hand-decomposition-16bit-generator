@@ -20,7 +20,7 @@ Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
 void Shader::BasicMaterial::init_shader_program()
 {
 
-  // m_texture_id = Texture::generate16bitTexture(1920, 1080);
+  m_texture_id = Texture::generate16bitTexture(1920, 1080);
   // m_texture_id = Texture::generate8bitTexture();
 
   // m_texture_id = TextureLoader::load_texture("./resources/images/texture-blender.png", 1024, 1024, 4);
@@ -47,7 +47,7 @@ glm::mat4 Shader::BasicMaterial::get_transform()
 {
   glm::mat4 transform = glm::mat4(1.0f);
   const float s = 40.;
-  transform = glm::scale(transform, glm::vec3(1., 1., 1.));
+  transform = glm::scale(transform, glm::vec3(1., -1., 1.));
   transform = glm::translate(transform, glm::vec3(0, -100, 0));
   transform = glm::scale(transform, glm::vec3(s, s, s));
   transform = glm::rotate(transform, glm::radians(90.f),

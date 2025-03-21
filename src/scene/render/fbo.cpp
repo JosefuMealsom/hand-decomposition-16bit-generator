@@ -18,14 +18,13 @@ Render::Fbo::Fbo(unsigned int w, unsigned int h)
     std::cerr << "Framebuffer is not complete!" << std::endl;
   }
 
-  // glBindTexture(GL_TEXTURE_2D, 0);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glGenRenderbuffers(1, &m_rbo);
+  glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
 
-  // glGenRenderbuffers(1, &m_rbo);
-  // glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
-  // glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
-  // glBindRenderbuffer(GL_RENDERBUFFER, 0);
-  // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Render::Fbo::bind()
