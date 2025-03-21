@@ -9,10 +9,10 @@ namespace Mesh
   // For uvs think of a graph axes to know how the lookup works eg top right is
   // 1, 1.
   static float verts[] = {
-      1.f, 1.f, 0.0f, 1.0f, 1.0f,   // top right
-      1.f, -1.f, 0.0f, 1.0f, 0.0f,  // bottom right
-      -1.f, -1.f, 0.0f, 0.0f, 0.0f, // bottom left
-      -1.f, 1.f, 0.0f, 0.0f, 1.0f,  // top left
+      1.f, 1.f, 0.0f, 0., 0., 1., 1.0f, 1.0f,   // top right
+      1.f, -1.f, 0.0f, 0., 0., 1., 1.0f, 0.0f,  // bottom right
+      -1.f, -1.f, 0.0f, 0., 0., 1., 0.0f, 0.0f, // bottom left
+      -1.f, 1.f, 0.0f, 0., 0., 1., 0.0f, 1.0f,  // top left
   };
 
   uint32_t inds[] = {0, 1, 3, 1, 2, 3};
@@ -45,16 +45,21 @@ namespace Mesh
     // Note that there is a maximum number of attributes you
     // can define. Minimum is usually 16.
 
-    uint32_t stride = 5 * sizeof(float);
+    uint32_t stride = 8 * sizeof(float);
 
     // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(0);
 
-    // UVs
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride,
+    // Normals
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride,
                           (void *)(sizeof(float) * 3));
     glEnableVertexAttribArray(1);
+
+    // UVs
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride,
+                          (void *)(sizeof(float) * 6));
+    glEnableVertexAttribArray(2);
 
     return Component::IndexedMesh(vao_id, vertices.size(), indices.size());
   }
