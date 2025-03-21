@@ -47,7 +47,7 @@ glm::mat4 Shader::BasicMaterial::get_transform()
 {
   glm::mat4 transform = glm::mat4(1.0f);
   const float s = 40.;
-  transform = glm::scale(transform, glm::vec3(1., -1., 1.));
+  transform = glm::scale(transform, glm::vec3(-1., -1., 1.));
   transform = glm::translate(transform, glm::vec3(0, -100, 0));
   transform = glm::scale(transform, glm::vec3(s, s, s));
   transform = glm::rotate(transform, glm::radians(90.f),

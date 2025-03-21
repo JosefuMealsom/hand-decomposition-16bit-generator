@@ -23,14 +23,14 @@ Scene::Scene()
 
   m_render_system = System::Render();
   m_uniform_buffer = Shader::UniformBuffer();
-  m_fbo = new Render::Fbo(1920, 1080);
+  m_fbo = new Render::Fbo(3840, 2160);
 
-  glm::vec3 cPosition = glm::vec3(0., 0., 500.);
+  glm::vec3 cPosition = glm::vec3(0., 0., 1000.);
   glm::vec3 cFront = glm::vec3(0., 0., -1.);
   glm::vec3 cUp = glm::vec3(0., 1., 0.);
 
   m_uniform_buffer.update_camera(glm::lookAt(cPosition, cFront, cUp));
-  m_uniform_buffer.update_projection(glm::ortho(-960., 960., 540., -540., 0., 1000.));
+  m_uniform_buffer.update_projection(glm::ortho(-960., 960., 540., -540., 0., 10000.));
 }
 
 void Scene::SetupEntities()
@@ -59,14 +59,12 @@ void Scene::DrawScene()
 
 void Scene::Render()
 {
-  DrawScene();
-
+  // DrawScene();
   m_fbo->bind();
+  glViewport(0, 0, 3840, 2160);
 
   DrawScene();
-  // Render::Image::PrintPixels(1920, 1080);
-  Render::Image::WritePixelsToFile(1920, 1080);
-  // Render::Image::Write16BitBufferToRawFile(1920, 1080);
+  Render::Image::Write16BitBufferToRawFile(3840, 2160);
   m_fbo->unbind();
 
   m_shouldQuitApplication = true;
