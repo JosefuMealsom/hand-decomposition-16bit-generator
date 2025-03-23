@@ -2,8 +2,8 @@ import sharp from "sharp";
 import { readFile } from "fs/promises";
 
 async function generateMapTexture() {
-  const diffuseData = await readFile("../hand.raw");
-  const uvMapData = await readFile("../uv-map.raw");
+  const diffuseData = await readFile("../output/hand.raw");
+  const uvMapData = await readFile("../output/uv-map.raw");
 
   const uvMapBuffer = new Uint16Array(uvMapData.buffer);
   const diffuseBuffer = new Uint16Array(diffuseData.buffer);
@@ -32,7 +32,7 @@ async function generateMapTexture() {
 
   await sharp(outputBuffer, {
     raw: { width: oW, height: oH, channels: 4 },
-  }).toFile("./output.png");
+  }).toFile("../output/output.png");
 }
 
 function getPixelAtRGB(
