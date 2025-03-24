@@ -1,0 +1,4 @@
+namespace ErrorLogger
+{
+  void LogGlError();
+}
