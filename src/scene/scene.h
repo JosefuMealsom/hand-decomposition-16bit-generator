@@ -4,6 +4,10 @@
 #include "systems/render.h"
 #include "render/fbo.h"
 
+// namespace entt
+// {
+//   class registry;
+// }
 class Scene
 {
 public:
@@ -13,12 +17,13 @@ public:
   bool shouldQuitApplication() { return m_shouldQuitApplication; };
 
 private:
-  entt::registry m_registry;
+  entt::registry m_registry_uvs;
+  entt::registry m_registry_hand_silhouette;
   System::Render m_render_system;
   Shader::UniformBuffer m_uniform_buffer;
   Render::Fbo *m_fbo;
 
   void SetupEntities();
-  void DrawScene();
+  void DrawScene(entt::registry &);
   bool m_shouldQuitApplication = false;
 };

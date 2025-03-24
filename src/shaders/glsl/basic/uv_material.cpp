@@ -1,23 +1,22 @@
-#include "shaders/glsl/basic/basic_material.h"
+#include "pch/pch.h"
+#include "shaders/glsl/basic/uv_material.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/vector_float3.hpp"
-#include "pch/pch.h"
 #include "shaders/texture_16bit_generator.h"
 #include "shaders/texture_loader.h"
 #include "logger.h"
 #include "shaders/texture_loader.h"
 
-Shader::BasicMaterial::BasicMaterial(glm::vec3 color)
+Shader::UVMaterial::UVMaterial()
     : Program(SourcePath("resources/shaders/vertex.glsl",
-                         "resources/shaders/fragment.glsl"))
+                         "resources/shaders/uv_fragment.glsl"))
 {
-  m_color = color;
   init_shader_program();
 }
 
-void Shader::BasicMaterial::init_shader_program()
+void Shader::UVMaterial::init_shader_program()
 {
   m_texture_id = Texture::generate16bitTexture(1920, 1080);
 
@@ -28,12 +27,11 @@ void Shader::BasicMaterial::init_shader_program()
   glBindTexture(GL_TEXTURE_2D, m_texture_id);
 
   update_uniform_1i("texture1", 0);
-  update_uniform_3f("color", m_color);
 
   unbind();
 }
 
-glm::mat4 Shader::BasicMaterial::get_transform()
+glm::mat4 Shader::UVMaterial::get_transform()
 {
   glm::mat4 transform = glm::mat4(1.0f);
   const float s = 40.;
@@ -48,7 +46,7 @@ glm::mat4 Shader::BasicMaterial::get_transform()
   return transform;
 }
 
-void Shader::BasicMaterial::update()
+void Shader::UVMaterial::update()
 {
   update_uniform_mat4("model", get_transform());
 }
