@@ -21,6 +21,7 @@ Scene::Scene()
   SetupEntities();
 
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_MULTISAMPLE);
 
   m_render_system = System::Render();
   m_uniform_buffer = Shader::UniformBuffer();

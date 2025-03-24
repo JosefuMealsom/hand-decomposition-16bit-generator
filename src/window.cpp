@@ -24,12 +24,12 @@ static void framebuffer_size_callback(GLFWwindow *w, int width, int height)
 GLFWwindow *Window::create_window(int width, int height, const char *title)
 {
   int a = glfwInit();
+  glfwWindowHint(GLFW_SAMPLES, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // This is required for mac
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
   GLFWwindow *window = glfwCreateWindow(width, height, title, NULL, NULL);
   glfwMakeContextCurrent(window);
   // This disables vsync
