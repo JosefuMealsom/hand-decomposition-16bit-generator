@@ -61,7 +61,7 @@ unsigned int Texture::generate16bitTexture(unsigned int w, unsigned int h)
   return texture_id;
 }
 
-unsigned int Texture::generate8bitTexture()
+unsigned int Texture::generate8bitTexture(unsigned int w, unsigned int h)
 {
   unsigned int texture_id;
   glGenTextures(1, &texture_id);
@@ -73,12 +73,10 @@ unsigned int Texture::generate8bitTexture()
                   GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  int w = 1080;
-  int h = 1080;
   int channels = 4;
 
   int numBytes = w * h * channels;
-  uint8_t *data = new uint8_t[1080 * 1080 * 4];
+  uint8_t *data = new uint8_t[w * h * 4];
 
   for (int i = 0; i < numBytes; i++)
   {

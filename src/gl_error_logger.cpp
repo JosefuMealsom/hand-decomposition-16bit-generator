@@ -4,6 +4,12 @@
 void ErrorLogger::LogGlError()
 {
   auto error = glGetError();
+
+  if (error == 0)
+  {
+    return;
+  }
+
   switch (error)
   {
   case 0x0502:

@@ -42,12 +42,12 @@ void Render::Image::PrintPixels(unsigned int w, unsigned int h)
   }
 }
 
-void Render::Image::Write8BitBufferToRawFile(unsigned int w, unsigned int h)
+void Render::Image::Write8BitBufferToRawFile(unsigned int w, unsigned int h, const std::string &filename)
 {
   unsigned short *pixels = new unsigned short[w * h * 4];
   glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-  FileSystem::WriteBinaryFile("./test.raw", pixels, w * h * 4);
+  FileSystem::WriteBinaryFile(filename, pixels, w * h * 4);
 
   delete[] pixels;
 }
