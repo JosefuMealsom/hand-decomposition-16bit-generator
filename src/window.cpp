@@ -11,58 +11,59 @@
 #include "logger.h"
 #include "window.h"
 
-static void framebuffer_size_callback(GLFWwindow *w, int width, int height)
+static void framebuffer_size_callback(GLFWwindow* w, int width, int height)
 {
-  LOG_INFO("Resized window, {0} {1}", width, height);
+	LOG_INFO("Resized window, {0} {1}", width, height);
 
-  // This takes into the account of the dpi
-  int framebuffer_width, framebuffer_height;
-  glfwGetFramebufferSize(w, &framebuffer_width, &framebuffer_height);
-  glViewport(0, 0, framebuffer_width, framebuffer_height);
+	// This takes into the account of the dpi
+	int framebuffer_width, framebuffer_height;
+	glfwGetFramebufferSize(w, &framebuffer_width, &framebuffer_height);
+	glViewport(0, 0, framebuffer_width, framebuffer_height);
 }
 
-GLFWwindow *Window::create_window(int width, int height, const char *title)
+GLFWwindow* Window::create_window(int width, int height, const char* title)
 {
-  int a = glfwInit();
-  glfwWindowHint(GLFW_SAMPLES, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  // This is required for mac
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  GLFWwindow *window = glfwCreateWindow(width, height, title, NULL, NULL);
-  glfwMakeContextCurrent(window);
-  // This disables vsync
-  glfwSwapInterval(0);
+	int a = glfwInit();
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+	// This is required for mac
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
+	glfwMakeContextCurrent(window);
+	// This disables vsync
+	glfwSwapInterval(0);
 
-  if (window == NULL)
-  {
-    LOG_ERROR("Failed to create GLFW window");
-    glfwTerminate();
+	if (window == NULL)
+	{
+		LOG_ERROR("Failed to create GLFW window");
+		glfwTerminate();
 
-    return nullptr;
-  }
+		return nullptr;
+	}
 
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-  {
-    LOG_ERROR("Failed to initialize GLAD");
-    // need to figure out NULL vs nullptr
-    return nullptr;
-  }
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		LOG_ERROR("Failed to initialize GLAD");
+		// need to figure out NULL vs nullptr
+		return nullptr;
+	}
 
-  // This could be defined smaller than the window if you want.
-  // Other content could be displayed around the opengl rendering
-  // context.
-  // Behind the scenes it normalises the coordinates to NDC, between -1 and 1
-  // and can then convert them to the screen coordinates.
-  // Doesn't affect glClear
-  // https://stackoverflow.com/questions/18830589/shouldnt-glclearcolor-obey-the-drawing-area-set-by-glviewport
-  glViewport(0, 0, width, height);
+	// This could be defined smaller than the window if you want.
+	// Other content could be displayed around the opengl rendering
+	// context.
+	// Behind the scenes it normalises the coordinates to NDC, between -1 and 1
+	// and can then convert them to the screen coordinates.
+	// Doesn't affect glClear
+	// https://stackoverflow.com/questions/18830589/shouldnt-glclearcolor-obey-the-drawing-area-set-by-glviewport
+	glViewport(0, 0, width, height);
 
-  LOG_INFO("Initialised window");
+	LOG_INFO("Initialised window");
 
-  glfwSetWindowSizeCallback(window, *framebuffer_size_callback);
+	glfwSetWindowSizeCallback(window, *framebuffer_size_callback);
 
-  framebuffer_size_callback(window, width, height);
-  return window;
+	framebuffer_size_callback(window, width, height);
+	return window;
 }
