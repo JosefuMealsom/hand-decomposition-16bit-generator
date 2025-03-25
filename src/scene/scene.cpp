@@ -20,6 +20,9 @@
 #include "feature_flags.h"
 #include "gl_error_logger.h"
 
+#define WIDTH 3840
+#define HEIGHT 2160
+
 Scene::Scene()
 {
 	SetupEntities();
@@ -32,8 +35,8 @@ Scene::Scene()
 
 	m_render_system = System::Render();
 	m_uniform_buffer = Shader::UniformBuffer();
-	m_fbo = new Render::FBO::BitDepth16(3840, 2160);
-	m_msaaFbo = new Render::FBO::MSAA(3840, 2160);
+	m_fbo = new Render::FBO::BitDepth16(WIDTH, HEIGHT);
+	m_msaaFbo = new Render::FBO::MSAA(WIDTH, HEIGHT);
 
 	glm::vec3 cPosition = glm::vec3(0., 0., 1000.);
 	glm::vec3 cFront = glm::vec3(0., 0., -1.);
@@ -47,7 +50,7 @@ void Scene::SetupEntities()
 {
 	auto uvEntity = m_registry_uvs.create();
 
-	std::string path = "./hand-updated.fbx";
+	std::string path = "./hand-updated-2.fbx";
 	Component::IndexedMesh mesh = Mesh::Loader::LoadMeshFromFile(path);
 
 	std::shared_ptr<Shader::Program> basic_shader =
@@ -77,34 +80,50 @@ void Scene::DrawScene(entt::registry& registry)
 
 void Scene::Render()
 {
-	if (FeatureFlags::CanMultisampleFbo()) {
-		LOG_INFO("Rendering to multisample framebuffer");
+	// if (FeatureFlags::CanMultisampleFbo()) {
+	//	LOG_INFO("Rendering to multisample framebuffer");
 
-		m_msaaFbo->bind();
+	//	// Render uvs
+	//	m_msaaFbo->bind();
 
-		glViewport(0, 0, 3840, 2160);
-		DrawScene(m_registry_uvs);
+	glViewport(0, 0, WIDTH, HEIGHT);
+	//	DrawScene(m_registry_uvs);
 
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_msaaFbo->id());
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo->id());
+	//	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_msaaFbo->id());
+	//	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo->id());
 
-		glBlitFramebuffer(0, 0, 3840, 2160, 0, 0, 3840, 2160, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	//	glBlitFramebuffer(0, 0, 3840, 2160, 0, 0, 3840, 2160, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo->id());
-		Render::Image::Write16BitBufferToRawFile(3840, 2160, "./output/hand_uvs.raw");
-	}
-	else {
-		LOG_INFO("Multisample framebuffer not supported, rendering normally");
+	//	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo->id());
+	//	Render::Image::Write16BitBufferToRawFile(3840, 2160, "./output/hand_uvs.raw");
 
-		m_fbo->bind();
+	//	// Render hand silhouette
+	m_msaaFbo->bind();
+	DrawScene(m_registry_hand_silhouette);
 
-		DrawScene(m_registry_uvs);
-		Render::Image::Write16BitBufferToRawFile(3840, 2160, "./output/hand_uvs.raw");
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_msaaFbo->id());
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo->id());
 
-		DrawScene(m_registry_hand_silhouette);
-		Render::Image::Write16BitBufferToRawFile(3840, 2160, "./output/hand_silhouette.raw");
-		m_fbo->unbind();
-	}
+	glBlitFramebuffer(0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo->id());
+	Render::Image::Write16BitBufferToRawFile(WIDTH, HEIGHT, "./output/hand_silhouette.raw");
+
+	//}
+	// else {
+	//	LOG_INFO("Multisample framebuffer not supported, rendering normally");
+
+	m_fbo->bind();
+
+	glViewport(0, 0, WIDTH, HEIGHT);
+
+	DrawScene(m_registry_uvs);
+	Render::Image::Write16BitBufferToRawFile(WIDTH, HEIGHT, "./output/hand_uvs.raw");
+
+	DrawScene(m_registry_hand_silhouette);
+	// Render::Image::Write16BitBufferToRawFile(WIDTH, HEIGHT, "./output/hand_silhouette.raw");
+	m_fbo->unbind();
+	//}
 
 	m_shouldQuitApplication = true;
 };

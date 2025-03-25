@@ -22,3 +22,5 @@ Debug
 Release
 x64
 out
+
+node_modules/

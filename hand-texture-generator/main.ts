@@ -2,8 +2,8 @@ import sharp from "sharp";
 import { readFile } from "fs/promises";
 
 async function generateMapTexture() {
-  const diffuseData = await readFile("../output/hand.raw");
-  const uvMapData = await readFile("../output/uv-map.raw");
+  const diffuseData = await readFile("../output/hand_silhouette.raw");
+  const uvMapData = await readFile("../output/hand_uvs.raw");
 
   const uvMapBuffer = new Uint16Array(uvMapData.buffer);
   const diffuseBuffer = new Uint16Array(diffuseData.buffer);
@@ -11,12 +11,15 @@ async function generateMapTexture() {
   // this is the output of the texture dimensions buffer
   const oW = 2048;
   const oH = 2048;
+  const rawW = 3840;
+  const rawH = 2160;
+
   const outputBuffer = Buffer.alloc(oW * oH * 4);
 
-  for (let x = 0; x < 3840; x++) {
-    for (let y = 0; y < 2160; y++) {
-      const p = getPixelAtRGBA(uvMapBuffer, x, y, 3840, 2160);
-      const { r, g, b } = getPixelAtRGBA(diffuseBuffer, x, y, 3840, 2160);
+  for (let x = 0; x < rawW; x++) {
+    for (let y = 0; y < rawH; y++) {
+      const p = getPixelAtRGBA(uvMapBuffer, x, y, rawW, rawH);
+      const { r, g, b } = getPixelAtRGBA(diffuseBuffer, x, y, rawW, rawH);
 
       const oX = Math.round((p.r / 65535) * oW);
       const oY = Math.round((p.g / 65535) * oH);
