@@ -19,7 +19,7 @@ project(${target_name} VERSION 1.0 LANGUAGES CXX)
 
 # Find all src files in current directory
 # Note: need to add a wildcard per depth! Better way of doing this?
-file(GLOB SRC_FILES CONFIGURE_DEPENDS  src/*.cpp src/*/*.cpp src/*/*/*.cpp src/*/*/*/*.cpp  ./vendor/glad/src/glad.cpp)
+file(GLOB SRC_FILES CONFIGURE_DEPENDS  src/*.cpp src/*/*.cpp src/*/*/*.cpp src/*/*/*/*.cpp ./vendor/glad/src/glad.cpp)
 
 message("Source files: \"${SRC_FILES}\"")
 
