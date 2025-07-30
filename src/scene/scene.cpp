@@ -80,24 +80,9 @@ void Scene::DrawScene(entt::registry& registry)
 
 void Scene::Render()
 {
-	// if (FeatureFlags::CanMultisampleFbo()) {
-	//	LOG_INFO("Rendering to multisample framebuffer");
-
-	//	// Render uvs
-	//	m_msaaFbo->bind();
-
 	glViewport(0, 0, WIDTH, HEIGHT);
-	//	DrawScene(m_registry_uvs);
 
-	//	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_msaaFbo->id());
-	//	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo->id());
-
-	//	glBlitFramebuffer(0, 0, 3840, 2160, 0, 0, 3840, 2160, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-	//	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo->id());
-	//	Render::Image::Write16BitBufferToRawFile(3840, 2160, "./output/hand_uvs.raw");
-
-	//	// Render hand silhouette
+	// Render hand silhouette
 	m_msaaFbo->bind();
 	DrawScene(m_registry_hand_silhouette);
 
@@ -109,10 +94,6 @@ void Scene::Render()
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo->id());
 	Render::Image::Write16BitBufferToRawFile(WIDTH, HEIGHT, "./output/hand_silhouette.raw");
 
-	//}
-	// else {
-	//	LOG_INFO("Multisample framebuffer not supported, rendering normally");
-
 	m_fbo->bind();
 
 	glViewport(0, 0, WIDTH, HEIGHT);
@@ -121,9 +102,7 @@ void Scene::Render()
 	Render::Image::Write16BitBufferToRawFile(WIDTH, HEIGHT, "./output/hand_uvs.raw");
 
 	DrawScene(m_registry_hand_silhouette);
-	// Render::Image::Write16BitBufferToRawFile(WIDTH, HEIGHT, "./output/hand_silhouette.raw");
 	m_fbo->unbind();
-	//}
 
 	m_shouldQuitApplication = true;
 };
